@@ -433,15 +433,9 @@ static void _FICAddCompletionBlockForEntity(NSString *formatName, NSMutableDicti
 }
 
 + (void)calculateSizeWithCompletionBlock:(FICImageTableCalculateSizeBCompletionBlock)completionBlock {
-    static dispatch_queue_t __fileQueue = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __fileQueue = dispatch_queue_create("com.path.FastImageCache.ImageTableFileQueue", NULL);
-    });
-
     NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[[FICImageTable class] directoryPath] error:nil];
-
-    dispatch_async(__fileQueue, ^{
+  
+    dispatch_async([[self class] dispatchQueue], ^{
         NSUInteger fileCount = 0;
         NSUInteger totalSize = 0;
 
